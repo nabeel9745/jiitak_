@@ -1,0 +1,26 @@
+# Containerize an application and pushing into AWS ECR and Deploying into ECS Cluster
+
+#create a dockerfile
+
+FROM Python 3.10.4
+ENV PYTHONUNBUFFERED 1
+WORKDIR /jiitak_pro
+COPY requirements.txt requirements.txt
+RUN pip install -r requirements.txt
+COPY . .
+EXPOSE 8000
+CMD python manage.py runserver 0.0.0.0:8000
+
+# docker build -t jiitak_pro 
+
+#docker run -p 4200:8000
+
+#create a repository on ecr
+
+#make shure you have aws-cli(to use the terminal) and push it
+
+#craete an ECS cluster
+
+#create a new task defenishion(with ec2) and add a container(mention the image_url)
+
+#Run a task (select your created task defenishion)
