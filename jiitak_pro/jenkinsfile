@@ -1,0 +1,38 @@
+pipeline {
+       agent {
+        docker {
+            image 'public.ecr.aws/c2i2s4p/jiitak_pro-898:latest'
+          }
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/nabeel9745/jiitak_'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh 'python manage.py test'
+            }
+        }
+
+             stage('Deploy') {
+            steps {
+                sshagent(['ssh-credentials-id']) {
+                    sh '''
+                        ssh yourusername@yourserver.com <<EOF
+                            cd /path/to/your/django/project
+                            git pull
+                            source env/bin/activate
+                            pip install -r requirements.txt
+                            python manage.py migrate
+                            sudo systemctl restart apache2
+                        EOF
+                    '''
+                }
+            }
+        }
+
+    }
+}
